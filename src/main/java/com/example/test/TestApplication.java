@@ -8,6 +8,6 @@ public class TestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
-        int d = 1;
+        //기존거 지우고 올리기
     }
 }
