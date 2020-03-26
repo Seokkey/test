@@ -25,6 +25,9 @@ public class TestApplication {
         //머리
         //body
         //leg
+<<<<<<< HEAD
         //1
+=======
+>>>>>>> 16b3e50... human
     }
 }
