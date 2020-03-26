@@ -8,6 +8,6 @@ public class TestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
-        //issue1 브랜치 커밋
+        //branch 2
     }
 }
