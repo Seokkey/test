@@ -8,6 +8,6 @@ public class TestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
-        /* 충돌 테스트 여기여기 */
+        //여기 또 바꿔
     }
 }
