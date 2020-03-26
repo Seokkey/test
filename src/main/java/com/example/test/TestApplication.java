@@ -21,5 +21,9 @@ public class TestApplication {
         //make a cherry farm!!!!
         //cherry pick
         //make some cherryJam
+
+        //머리
+        //body
+        //leg
     }
 }
