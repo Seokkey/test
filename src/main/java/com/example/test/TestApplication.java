@@ -8,23 +8,6 @@ public class TestApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
-        //branch 2
-        //3
-
-        //22222
-        //33333
-        //1
-        //reset
-        //start
-        //run
-        //end
-        //make a cherry farm!!!!
-        //cherry pick
-        //make some cherryJam
-
-        //머리
-        //body
-        //leg
-        //1
+        // master
     }
 }
