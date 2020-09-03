@@ -11,5 +11,6 @@ public class TestApplication {
         //develop 2414
         //test1
         //test112
+        System.out.println("args = [" + "크와앙" + "]");
     }
 }
