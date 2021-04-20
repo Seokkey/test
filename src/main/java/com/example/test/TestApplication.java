@@ -9,6 +9,7 @@ public class TestApplication {
     public static void main(String[] args) {
         SpringApplication.run(TestApplication.class, args);
         System.out.println("args = [" + "크와앙" + "]");
-        //변경
-    }
+    // 변경
+    // git commit -m "제목" -m "본문" -m "꼬릿말"
+  }
 }
