@@ -11,5 +11,6 @@ public class TestApplication {
         System.out.println("args = [" + "크와앙" + "]");
     // 변경
     // git commit -m "제목" -m "본문" -m "꼬릿말"
+      //checkout test
   }
 }
