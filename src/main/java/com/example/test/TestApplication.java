@@ -24,6 +24,7 @@ public class TestApplication {
     // rebase test3
     // rebase test complete
     // 로그인 기능 추가1
+    // 로그아웃 기능 추가
 
     /**
      * 부동소수점 연산
