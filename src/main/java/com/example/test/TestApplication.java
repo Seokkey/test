@@ -1,30 +1,19 @@
 package com.example.test;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.format.datetime.joda.LocalDateTimeParser;
-import org.springframework.util.ObjectUtils;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 public class TestApplication {
@@ -33,9 +22,134 @@ public class TestApplication {
     // rebase test1
     // rebase test2
     // rebase test3
-   // rebase test complete
+    // rebase test complete
 
-    System.out.println(LocalDateTime.of(LocalDate.now().minusDays(2), LocalTime.MIDNIGHT));
+    /**
+     * 부동소수점 연산
+     * */
+    double value1 = 12.23;
+    double value2 = 34.45;
+    double sumDouble = value1 + value2;
+
+    float value3 = 12.23f;
+    float value4 = 34.45f;
+    float sumFloat = value3 + value4;
+
+    // 46.68 ???
+    System.out.println("sumDouble => " + sumDouble);
+    System.out.println("sumFloat => " + sumFloat);
+
+    /**
+     * 시간 단위 까지만 비교
+     * */
+    // System.out.println(LocalDateTime.parse(
+    //     "2022041415", DateTimeFormatter.ofPattern("yyyyMMddHH")).isEqual(LocalDateTime.of(2022, 4, 14, 15, 6).truncatedTo(ChronoUnit.HOURS)));
+
+    /** 중복 제거 테스트 */
+    // List<FileDto.Req> fileReqList = new ArrayList<>();
+    // FileDto.Req reqBuilder1 =
+    //     FileDto.Req.builder()
+    //         .mtrSn(17) // pk
+    //         .mtrPrdtDt(
+    //             LocalDateTime.parse(
+    //                 "2019_10_03_2100", DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm"))) // pk
+    //         .fileNm("파일1") // pk
+    //         .mtrTyCd("STREM")
+    //         .mtrSttCd("READY")
+    //         .filePth("경로")
+    //         .fileExsn("확장자")
+    //         .fileChecksum("1234")
+    //         .build();
+    //
+    // FileDto.Req reqBuilder2 =
+    //     FileDto.Req.builder()
+    //         .mtrSn(17) // pk
+    //         .mtrPrdtDt(
+    //             LocalDateTime.parse(
+    //                 "2019_10_03_2100", DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm"))) // pk
+    //         .fileNm("TOTL_JEJU_2019_10_03_2100.tuv") // pk
+    //         .fileNm("파일1") // pk
+    //         .mtrTyCd("STREM")
+    //         .mtrSttCd("READY")
+    //         .filePth("경로")
+    //         .fileExsn("확장자")
+    //         .fileChecksum("4567")
+    //         .build();
+    //
+    // FileDto.Req reqBuilder3 =
+    //     FileDto.Req.builder()
+    //         .mtrSn(17) // pk
+    //         .mtrPrdtDt(
+    //             LocalDateTime.parse(
+    //                 "2019_10_03_2100", DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm"))) // pk
+    //         .fileNm("파일2") // pk
+    //         .mtrTyCd("STREM")
+    //         .mtrSttCd("READY")
+    //         .filePth("경로")
+    //         .fileExsn("확장자")
+    //         .fileChecksum("1234")
+    //         .build();
+    //
+    //
+    // FileDto.Req reqBuilder4 =
+    //     FileDto.Req.builder()
+    //         .mtrSn(17) // pk
+    //         .mtrPrdtDt(
+    //             LocalDateTime.parse(
+    //                 "2019_10_03_2100", DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm"))) // pk
+    //         .fileNm("파일2") // pk
+    //         .mtrTyCd("STREM")
+    //         .mtrSttCd("READY")
+    //         .filePth("경로")
+    //         .fileExsn("확장자")
+    //         .fileChecksum("1234")
+    //         .build();
+    //
+    // FileDto.Req reqBuilder5 =
+    //     FileDto.Req.builder()
+    //         .mtrSn(17) // pk
+    //         .mtrPrdtDt(
+    //             LocalDateTime.parse(
+    //                 "2019_10_03_2100", DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm"))) // pk
+    //         .fileNm("파일2") // pk
+    //         .mtrTyCd("STREM")
+    //         .mtrSttCd("READY")
+    //         .filePth("경로")
+    //         .fileExsn("확장자")
+    //         .fileChecksum("1234")
+    //         .build();
+    //
+    // FileDto.Req reqBuilder6 =
+    //     FileDto.Req.builder()
+    //         .mtrSn(17) // pk
+    //         .mtrPrdtDt(
+    //             LocalDateTime.parse(
+    //                 "2019_10_03_2100", DateTimeFormatter.ofPattern("yyyy_MM_dd_HHmm"))) // pk
+    //         .fileNm("파일2") // pk
+    //         .mtrTyCd("STREM")
+    //         .mtrSttCd("READY")
+    //         .filePth("경로")
+    //         .fileExsn("확장자")
+    //         .fileChecksum("1234")
+    //         .build();
+    //
+    // fileReqList.add(reqBuilder1);
+    // fileReqList.add(reqBuilder2);
+    // fileReqList.add(reqBuilder3);
+    // fileReqList.add(reqBuilder4);
+    // fileReqList.add(reqBuilder5);
+    // fileReqList.add(reqBuilder6);
+    //
+    // fileReqList.stream()
+    //     .filter(distinctByKeys(FileDto.Req::getMtrSn, FileDto.Req::getMtrPrdtDt, FileDto.Req::getFileNm))
+    //     .distinct()
+    //     .forEach(req -> System.out.println(req));
+
+    // System.out.println(LocalDateTime.of(LocalDate.now().minusDays(2), LocalTime.MIDNIGHT));
+    // double direction =  getCurrentDirect(7.330, -73.493);
+    // double speed =getCurrentSpeed(7.330, -73.493);
+    // System.out.println("direction:: "+direction);
+    // System.out.println("speed:: "+speed);
 
     // 날짜 테스트
     //      Calendar c = Calendar.getInstance();
@@ -145,11 +259,22 @@ public class TestApplication {
     // Optional.ofNullable(humans).orElseThrow(() -> new Exception("널이다"));
 
     //   List<String> adf = new ArrayList<>();
+    //   //
+    //   // adf.add("a");
+    //   // adf.add("b");
+    //   // adf.add("c");
     //
-    //   adf.add("a");
-    //   adf.add("b");
-    //   adf.add("c");
+    // adf.stream()
+    //     .forEach(
+    //         s -> {
+    //           System.out.println("s");
+    //         });
     //
+    // adf.forEach(
+    //     s -> {
+    //       System.out.println("걍 포이치"+ s);
+    //     });
+
     //   Optional.ofNullable(adf)
     //       .map(
     //           strings -> {
@@ -237,16 +362,60 @@ public class TestApplication {
     // log("get(): " + future.get());
 
     /** runAsync()도 사용방법은 동일합니다. supplyAsync()는 리턴 값이 있는 반면에 runAsync()는 리턴값이 없습니다 */
-    CompletableFuture<Void> future = CompletableFuture.runAsync(() -> log("future example"));
-    log("get(): " + future.get());
+    // CompletableFuture<Void> future = CompletableFuture.runAsync(() -> log("future example"));
+    // log("get(): " + future.get());
 
-    /**
-     * 처리가 완료될 때까지 기다리지 않아도 된다면 다음과 같이 짧게 구현할 수도 있습니다.
-     * */
-    CompletableFuture.runAsync(() -> log("future example"));
+    /** 처리가 완료될 때까지 기다리지 않아도 된다면 다음과 같이 짧게 구현할 수도 있습니다. */
+    // CompletableFuture.runAsync(() -> log("future example"));
   }
 
-  public static void log(String msg) {
-    System.out.println(LocalTime.now() + " (" + Thread.currentThread().getName() + ") " + msg);
+  // public static void log(String msg) {
+  //   System.out.println(LocalTime.now() + " (" + Thread.currentThread().getName() + ") " + msg);
+  // }
+
+  // 유향 계산 테스트
+  public static double getCurrentDirect(double u, double v) {
+    double ang = 0;
+    double arctan = (Math.atan2(v, u) - ang) * 180 / Math.PI;
+    arctan = arctan * -1 + 90;
+    if (arctan < 0) {
+      arctan = arctan + 360;
+    }
+    return (Math.round(arctan * 100d) / 100d);
+  }
+
+  // 유속 계산 테스트
+  public static double getCurrentSpeed(double u, double v) {
+    double u2 = Math.pow(u, 2);
+    double v2 = Math.pow(v, 2);
+    if (u2 == Double.NaN) {
+      u2 = 0.0;
+    }
+    if (v2 == Double.NaN) {
+      v2 = 0.0;
+    }
+    double speed = Math.sqrt(u2 + v2);
+    return round((Math.round(speed * 100d) / 100d));
+  }
+
+  static double round(double d) {
+    int n = 2;
+    return (d < -1000) ? 0 : Math.round(d * Math.pow(10, n)) / Math.pow(10, n);
+  }
+
+  /**
+   * Stream에서 distinct 다중키 비교를 위함 (hashCode, equals 재정의를 하지 않고)
+   * list.stream().filter(distinctByKeys(UserVO::getName, UserVO::getAge)).distinct()...
+   *
+   * @param keyExtractors Object[]
+   * @return Predicate
+   */
+  public static <T> Predicate<T> distinctByKeys(Function<? super T, ?>... keyExtractors) {
+    final Map<List<?>, Boolean> seen = new ConcurrentHashMap<>();
+    return t -> {
+      final List<?> keys =
+          Arrays.stream(keyExtractors).map(ke -> ke.apply(t)).collect(Collectors.toList());
+      return seen.putIfAbsent(keys, Boolean.TRUE) == null;
+    };
   }
 }
