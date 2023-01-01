@@ -1,21 +1,26 @@
 package com.example.test;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.util.ObjectUtils;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SpringBootApplication
+@Slf4j
 public class TestApplication {
   public static void main(String[] args) throws Exception {
     SpringApplication.run(TestApplication.class, args);
@@ -26,26 +31,99 @@ public class TestApplication {
     // 로그인 기능 추가1
     // 로그아웃 기능 추가
 
-    /**
-     * 부동소수점 연산
-     * */
-    double value1 = 12.23;
-    double value2 = 34.45;
-    double sumDouble = value1 + value2;
+    /** 파일 확장자 */
+    try (Stream<Path> stream = Files.walk(Paths.get("/Users/ust21/koos/kiost/ctd"))) {
+      stream.filter(path -> {
+            if (!Files.isDirectory(path)
+                && !path.toFile().isHidden()) {
+              return fileMapper
+                  .select(
+                      mtrSn,
+                      getMtrPrdtDt(mtrSn, path.toString()),
+                      path.getFileName().toString())
+                  .map(
+                      file -> {
+                        String checksum = FileUtils.checksum(path);
+                        return !file.getFileChecksum().equals(checksum);
+                      })
+                  .orElse(true);
+            } else {
+              return false;
+            }
+          })
+          .forEach(
+          path -> {
+            String a =
+                path.getFileName()
+                    .toString()
+                    .substring(path.getFileName().toString().lastIndexOf('.') + 1);
+            System.out.println(a);
+          });
+    }
 
-    float value3 = 12.23f;
-    float value4 = 34.45f;
-    float sumFloat = value3 + value4;
+    /** 배열 역정렬 */
+    // String[] colorArray = {
+    //   "#006FFF", "#0080FF", "#008FFF", "#009EFF", "#009EFF", "#00AFFF", "#00BEFF", "#00CFFF",
+    // };
+    // System.out.println(colorArray.length);
+    // double a = 0;
+    // List<String> listItem = Arrays.asList(colorArray);
+    // // 역정렬
+    // Collections.reverse(listItem);
+    // String[] reversed = listItem.toArray(colorArray);
+    // System.out.println("리버스 후 배열: " + Arrays.toString(reversed));
+    // for (int i = 0; i < reversed.length; i++) {
+    //   a = a + 1.5625;
+    //   String c = "<ogc:Literal>" + reversed[i] + "</ogc:Literal>";
+    //   String v = "<ogc:Literal>" + a + "</ogc:Literal>";
+    //   // String c = "<ColorMapEntry color=\"" + reversed[i] + "\" quantity=\""+a+"\"
+    //   // label=\"values\" />";
+    //
+    //   // System.out.println(i + "번째");
+    //   // System.out.println(a);
+    //   System.out.println(c);
+    //   System.out.println(v);
+    // }
 
-    // 46.68 ???
-    System.out.println("sumDouble => " + sumDouble);
-    System.out.println("sumFloat => " + sumFloat);
+    /** 인피니티 여부 확인 */
+    // Double infinite = 10d / 0; // true
+    // Double infinite = 10d / 3; // false
+    // System.out.println("인피니티?? " + infinite + Double.isInfinite(infinite));
 
-    /**
-     * 시간 단위 까지만 비교
-     * */
+    /** String format 02d 테스트 */
+    // String v = "1";
+    // String v = "41";
+    // String format02d = String.format("N%02d", Integer.parseInt(v));
+    //
+    // System.out.println("format02d => " + format02d);
+    // System.out.println("sumFloat => " + sumFloat);
+
+    /** 부동소수점 연산 */
+    // double value1 = 12.23;
+    // double value2 = 34.45;
+    // double sumDouble = value1 + value2;
+    //
+    // float value3 = 12.23f;
+    // float value4 = 34.45f;
+    // float sumFloat = value3 + value4;
+    //
+    // // 46.68 ???
+    // System.out.println("sumDouble => " + sumDouble);
+    // System.out.println("sumFloat => " + sumFloat);
+
+    /** 시간 단위 까지만 비교 */
     // System.out.println(LocalDateTime.parse(
-    //     "2022041415", DateTimeFormatter.ofPattern("yyyyMMddHH")).isEqual(LocalDateTime.of(2022, 4, 14, 15, 6).truncatedTo(ChronoUnit.HOURS)));
+    //     "2022041415", DateTimeFormatter.ofPattern("yyyyMMddHH")).isEqual(LocalDateTime.of(2022,
+    // 4, 14, 15, 6).truncatedTo(ChronoUnit.HOURS)));
+
+    /** 일 단위 까지만 비교 */
+    // System.out.println(LocalDateTime.parse(
+    //     "2022041415",
+    // DateTimeFormatter.ofPattern("yyyyMMddHH")).truncatedTo(ChronoUnit.DAYS).isEqual(LocalDateTime.of(2022,
+    // 4, 14, 15, 6).truncatedTo(ChronoUnit.DAYS)));
+    //
+    // System.out.println(LocalDateTime.of(2022,
+    //     4, 14, 15, 6).truncatedTo(ChronoUnit.DAYS));
 
     /** 중복 제거 테스트 */
     // List<FileDto.Req> fileReqList = new ArrayList<>();
@@ -143,17 +221,12 @@ public class TestApplication {
     // fileReqList.add(reqBuilder6);
     //
     // fileReqList.stream()
-    //     .filter(distinctByKeys(FileDto.Req::getMtrSn, FileDto.Req::getMtrPrdtDt, FileDto.Req::getFileNm))
+    //     .filter(distinctByKeys(FileDto.Req::getMtrSn, FileDto.Req::getMtrPrdtDt,
+    // FileDto.Req::getFileNm))
     //     .distinct()
     //     .forEach(req -> System.out.println(req));
 
-    // System.out.println(LocalDateTime.of(LocalDate.now().minusDays(2), LocalTime.MIDNIGHT));
-    // double direction =  getCurrentDirect(7.330, -73.493);
-    // double speed =getCurrentSpeed(7.330, -73.493);
-    // System.out.println("direction:: "+direction);
-    // System.out.println("speed:: "+speed);
-
-    // 날짜 테스트
+    /** 날짜 테스트 */
     //      Calendar c = Calendar.getInstance();
     //      c.setTime(new Date());
     //      c.add(Calendar.DAY_OF_MONTH, 1);
@@ -165,37 +238,39 @@ public class TestApplication {
     ;
     // log.info("LocalDateTime.from(LocalDate.now()) ::: {}", LocalDateTime.from(LocalDate.now()));
 
-    // 정규식 테스트
-    //      String str = "1";
+    // System.out.println(LocalDateTime.of(LocalDate.now().minusDays(2), LocalTime.MIDNIGHT));
+    // double direction =  getCurrentDirect(7.330, -73.493);
+    // double speed =getCurrentSpeed(7.330, -73.493);
+    // System.out.println("direction:: "+direction);
+    // System.out.println("speed:: "+speed);
+
+    /** 정규식 테스트 */
+    // String str = "1";
     ////      Pattern pattern = Pattern.compile("^[0-9|-]+$");
     ////      Pattern pattern = Pattern.compile("^[0-9-]+$");
-    //      Pattern pattern = Pattern.compile("^[0-9]+[0-9|-]?[0-9]?$");
-    //      Matcher matcher = pattern.matcher(str);
+    // Pattern pattern = Pattern.compile("^[0-9]+[0-9|-]?[0-9]?$");
+    // Matcher matcher = pattern.matcher(str);
     //
-    //      if(matcher.find()) {
-    //        System.out.println("정규식 통과 값"+str);
-    //      } else {
-    //        System.out.println("정규식 아닌 값 ");
-    //      }
+    // if (matcher.find()) {
+    //   System.out.println("정규식 통과 값" + str);
+    // } else {
+    //   System.out.println("정규식 아닌 값 ");
+    // }
 
-    // commit 1
-    // commit 2
-    // commit 3
+    /** enum 테스트 */
+    // System.out.println(RoadSide.RIGHT.getKrName() + ", " + RoadSide.RIGHT.getWidth());
 
-    // enum 테스트
-    //    System.out.println(RoadSide.RIGHT.getKrName() + RoadSide.RIGHT.getWidth());
+    /** 쿼리 파람 테스트1 */
+    // QueryParamBuilder queryParamBuilder = new QueryParamBuilder("PATH!강원도,DFT:*아침");
+    // List<QueryParam> qr = queryParamBuilder.getParams();
+    // qr.forEach(
+    //     queryParam -> {
+    //       System.out.println("getKey " + queryParam.getKey());
+    //       System.out.println("getOperation " + queryParam.getOperation());
+    //       System.out.println("getValue " + queryParam.getValue());
+    //     });
 
-    //    QueryParamBuilder queryParamBuilder = new QueryParamBuilder("PATH!강원도,DFT:*아침");
-    //
-    //    List<QueryParam> qr = queryParamBuilder.getParams();
-    //
-    //    qr.forEach(queryParam -> {
-    //      System.out.println("getKey "+queryParam.getKey());
-    //      System.out.println("getOperation "+queryParam.getOperation());
-    //      System.out.println("getValue "+queryParam.getValue());
-    //    });
-
-    // for 테스트
+    /** for 테스트 */
     // LocalDateTime startDateTime = LocalDateTime.parse(
     //     "2021112513", DateTimeFormatter.ofPattern("yyyyMMddHH"));
     // List<LocalDateTime> localDateTimes = new ArrayList<>(); // 2021112513, 2021112514, 2021112515
@@ -207,7 +282,7 @@ public class TestApplication {
     //
     // System.out.println("localDateTimes :: " + localDateTimes);
 
-    // flatMap 테스트
+    /** flatMap 테스트 */
     // LocalDateTime preLdt = LocalDateTime.parse(
     //         "202108080136", DateTimeFormatter.ofPattern("yyyyMMddHHmm"));
     //
@@ -260,23 +335,38 @@ public class TestApplication {
     // if (ObjectUtils.isEmpty(humans)) System.out.println("엠티네 엠티");
     // Optional.ofNullable(humans).orElseThrow(() -> new Exception("널이다"));
 
-    //   List<String> adf = new ArrayList<>();
+    /** Stream Foreach, map null 인 경우 확인 */
+    //   List<String> foreachTestList = new ArrayList<>();
     //   //
-    //   // adf.add("a");
-    //   // adf.add("b");
-    //   // adf.add("c");
+    // foreachTestList.add("a");
+    // foreachTestList.add("b");
+    // foreachTestList.add("c");
     //
-    // adf.stream()
+    // foreachTestList.stream()
     //     .forEach(
     //         s -> {
+    //           // Stream forEach 는 리스트가 null인 경우 그냥 안탐 에러 없음
     //           System.out.println("s");
     //         });
     //
-    // adf.forEach(
+    // foreachTestList.forEach(
     //     s -> {
+    //       // List.forEach 도 리스트가 null인 경우 그냥 안탐 에러 없음
     //       System.out.println("걍 포이치"+ s);
     //     });
+    // System.out.println("foreachTestList" + foreachTestList);
+    //
+    // List<String> mapTestList = foreachTestList.stream()
+    //     .map(
+    //         s -> {
+    //           // Stream map도 리스트가 null인 경우 그냥 안탐 에러 없음
+    //           System.out.println("s");
+    //           return  s;
+    //         }).collect(Collectors.toList());
+    //
+    // System.out.println("mapTestList" + mapTestList);
 
+    /** Optional ofNullable 널 체크 확인 */
     //   Optional.ofNullable(adf)
     //       .map(
     //           strings -> {
@@ -301,25 +391,24 @@ public class TestApplication {
     //     this.name = name;
     //   }
 
-    // CompletableFuture 테스트
-
+    /** CompletableFuture 테스트 */
     /**
-     * newCachedThreadPool()으로 직접 쓰레드를 만들었고, 그 쓰레드의 작업이 완료되면 complete("Finished")으로 결과를 Future에
+     * newCachedThreadPool()으로 직접 쓰레드풀을 만들었고, 그 쓰레드의 작업이 완료되면 complete("Finished")으로 결과를 Future에
      * 저장하였습니다. 결과가 저장되면 get()은 값을 리턴하며 block된 상태에서 빠져나옵니다.
      */
     // CompletableFuture<String> future
     //     = new CompletableFuture<>();
     // Executors.newCachedThreadPool().submit(() -> {
-    //   Thread.sleep(2000);
+    //   Thread.sleep(5000);
     //   future.complete("Finished");
     //   return null;
     // });
+    // log("여기 호출");
     // log(future.get());
-
+    // log("여기 호출2");
     /** 이미 값을 알고 있다면 쓰레드를 만들지 않고 completedFuture()으로 값을 할당할 수 있습니다. */
     // Future<String> completableFuture =
     //     CompletableFuture.completedFuture("Skip!");
-    //
     // String result = completableFuture.get();
     // log(result);
 
@@ -329,14 +418,17 @@ public class TestApplication {
     // CompletableFuture<String> future
     //     = new CompletableFuture<>();
     // Executors.newCachedThreadPool().submit(() -> {
-    //   Thread.sleep(2000);
-    //   future.cancel(false);
-    //   return null;
+    // // Executors.newFixedThreadPool(1).submit(() -> {
+    //   Thread.sleep(5000);
+    //   // future.cancel(false);
+    //   // return null;
+    //   return "쓰레스 작업통과";
     // });
     // String result = null;
     // try {
     //   result = future.get();
     // } catch (CancellationException e) {
+    //   System.out.println("예외처리");
     //   e.printStackTrace();
     //   result = "Canceled!";
     // }
@@ -369,11 +461,19 @@ public class TestApplication {
 
     /** 처리가 완료될 때까지 기다리지 않아도 된다면 다음과 같이 짧게 구현할 수도 있습니다. */
     // CompletableFuture.runAsync(() -> log("future example"));
+
+    // CompletableFuture.join() 메소드는 get 메소드와 비슷한데, join 메소드는 Future 가 일반적으로 complete 되지 않으면
+    // unchecked exception 을 발생시킨다.
+    // allOf()의 메소드 시그니처를 보면 아시겠지만, 해당 메소드는 모든 CompletableFuture에 Blocking만 걸 뿐, 결과를 직접 반환하지는
+    // 않습니다.따라서 모든 작업이 완료되었음을 allOf()를 통해 보장받고 나면, thenApply()를 통해 직접 given절의 CompletableFuture
+    // 리스트에서 join()으로 값을 꺼내주는 작업을 거쳐야 합니다.
+
+    /** --메인 종료 */
   }
 
-  // public static void log(String msg) {
-  //   System.out.println(LocalTime.now() + " (" + Thread.currentThread().getName() + ") " + msg);
-  // }
+  public static void log(String msg) {
+    System.out.println(LocalTime.now() + " (" + Thread.currentThread().getName() + ") " + msg);
+  }
 
   // 유향 계산 테스트
   public static double getCurrentDirect(double u, double v) {
